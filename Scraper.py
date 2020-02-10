@@ -5,31 +5,23 @@
    AUTHOR: DAVID HOEFS """
 
 import time
+
 import requests
 from arcgis.geocoding import reverse_geocode
 from arcgis.gis import GIS
 from bs4 import BeautifulSoup
 from scrapy import Selector
 from selenium import webdriver
+from streetaddress import StreetAddressParser
 
 # getting address from arcGIS from GPS coordinates
 gis = GIS("https://hoefsdavid9701.maps.arcgis.com", "hoefsdavid9701", "9989Jada!!")
-results = reverse_geocode([-101.846811, 33.625072]) # Will need to flip these around programmatically
+results = reverse_geocode([-101.906908, 33.541966])  # Will need to flip these around programmatically
 valueFromGIS = results["address"]["Match_addr"]
 
-
-# function to insert underscore into address string for LCAD scraping
-def insert_underscore(string, index):
-    return string[:index] + '_' + string[index:]
-
-
-# Modify address string from arcGIS to be in correct format for LCAD scraping
-valueFromGIS = valueFromGIS.upper()
-inputForScrape = valueFromGIS[0:12]
-inputForScrape = insert_underscore(inputForScrape, 5)
-inputForScrape = insert_underscore(inputForScrape, 10)
-inputForScrape = ''.join(inputForScrape.split())
-print(inputForScrape)
+# Use streetaddress library to parse address data from arcGIS
+addr_parser = StreetAddressParser()
+addr = addr_parser.parse(valueFromGIS)
 
 
 # class to hold home owner information from LCAD scraping
@@ -42,8 +34,10 @@ class HomeOwner:
         self.value = value
 
 
-# concatinating address to end of LCAD search URL
-url = 'http://lubbockcad.org/Property-Search-Result/searchtext/' + inputForScrape
+# concatenating address to end of LCAD search URL
+url = 'http://lubbockcad.org/Property-Search-Result/searchtext/' + addr['house'] + '_' + addr['street_name'] + '_' + \
+      addr['street_type']
+print(url)
 page = requests.get(url)
 soup = BeautifulSoup(page.content, 'html.parser')
 # extract homeowner info from LCAD
