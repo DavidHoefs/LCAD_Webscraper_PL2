@@ -16,7 +16,7 @@ from streetaddress import StreetAddressParser
 
 # getting address from arcGIS from GPS coordinates
 gis = GIS("https://hoefsdavid9701.maps.arcgis.com", "hoefsdavid9701", "9989Jada!!")
-results = reverse_geocode([-101.906908, 33.541966])  # Will need to flip these around programmatically
+results = reverse_geocode([-101.935077,33.581268])  # Will need to flip these around programmatically
 valueFromGIS = results["address"]["Match_addr"]
 
 # Use streetaddress library to parse address data from arcGIS
