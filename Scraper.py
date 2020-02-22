@@ -15,7 +15,7 @@ from selenium import webdriver
 from streetaddress import StreetAddressParser
 
 # getting address from arcGIS from GPS coordinates
-gis = GIS("https://hoefsdavid9701.maps.arcgis.com", "hoefsdavid9701", "9989Jada!!")
+gis = GIS("https://hoefsdavid9701.maps.arcgis.com", "YOUR USERNAME", "YOUR PASSWORD")
 results = reverse_geocode([-101.935077,33.581268])  # Will need to flip these around programmatically
 valueFromGIS = results["address"]["Match_addr"]
 
